@@ -10,7 +10,7 @@ interface IOptions {
   replaceRegex?: RegExp;
 }
 
-class isProfane implements IOptions {
+class Profanease implements IOptions {
   public lang: string;
   public list: string[];
   public placeHolder: string;
@@ -85,4 +85,4 @@ class isProfane implements IOptions {
   }
 }
 
-export = isProfane;
+export = Profanease;
