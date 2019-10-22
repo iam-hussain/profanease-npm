@@ -5,7 +5,7 @@ A lightweight javascript detector and filter for profanity words / bad words wri
 * Works on ECMAScript all versions
 * Support for multi language profanity detector and filter
 
-# Instalation 
+# Installation 
 
 Using npm:   
 ```js   
