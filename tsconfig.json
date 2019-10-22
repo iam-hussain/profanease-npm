@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "declaration": true,
+    "outDir": "./lib",
+    "strict": true,
+    "sourceMap": true,
+    "baseUrl": "src",
+    "resolveJsonModule": true,
+    "paths": {
+        "@languages/*": ["static/languages"]
+    }    
+  },
+  "include": ["src", "./**/*", "src/static/*"],
+  "exclude": ["node_modules", "**/__tests__/*"]
+}

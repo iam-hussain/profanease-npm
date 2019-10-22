@@ -1,0 +1,7 @@
+#Typescipt Code
+/src
+
+#Typescipt files
+tsconfig.json
+tslint.json
+.prettierrc

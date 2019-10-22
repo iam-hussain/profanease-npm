@@ -1,0 +1,58 @@
+{
+  "name": "is-profane",
+  "version": "1.0.0",
+  "description": "A lightweight javascript detector and filter for profanity words / bad words written in typescript",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "scripts": {
+    "test": "jest --config jestconfig.json",
+    "build": "tsc && copyfiles -f ./src/static/**/*.json lib/static/languages",
+    "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
+    "lint": "tslint -p tsconfig.json",
+    "prepare": "npm run build",
+    "prepublishOnly": "npm test && npm run lint",
+    "preversion": "npm run lint",
+    "version": "npm run format && git add -A src",
+    "postversion": "git push && git push --tags"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ZaHuPro/isProfane.git"
+  },
+  "keywords": [
+    "is-profane",
+    "is profane",
+    "profane",
+    "profanity",
+    "bad",
+    "words",
+    "detector",
+    "filter",
+    "basic",
+    "replace",
+    "is profane",
+    "profane",
+    "multi",
+    "language",
+    "vulgar"
+  ],
+  "author": "ZaHuPro",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ZaHuPro/isProfane/issues"
+  },
+  "homepage": "https://github.com/ZaHuPro/isProfane#readme",
+  "devDependencies": {
+    "@types/jest": "^24.0.19",
+    "copyfiles": "^2.1.1",
+    "jest": "^24.9.0",
+    "prettier": "^1.18.2",
+    "ts-jest": "^24.1.0",
+    "tslint": "^5.20.0",
+    "tslint-config-prettier": "^1.18.0",
+    "typescript": "^3.6.4"
+  },
+  "dependencies": {
+    "@types/node": "^12.11.2"
+  }
+}
