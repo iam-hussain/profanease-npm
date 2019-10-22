@@ -1,4 +1,4 @@
-# isProfane
+# Profanease
 A lightweight javascript detector and filter for profanity words / bad words written in typescript
 
 
@@ -15,10 +15,8 @@ $ npm i --save is-profane
 
 In Node.js: 
 ```js   
-//ES5
 var Profanease = require('profanease');
-
-//ES6+
+//or
 import Profanease from 'profanease'
 ```
 

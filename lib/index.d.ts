@@ -7,7 +7,7 @@ interface IOptions {
     regex?: RegExp;
     replaceRegex?: RegExp;
 }
-export declare class Profanity implements IOptions {
+declare class isProfane implements IOptions {
     lang: string;
     list: string[];
     placeHolder: string;
@@ -20,7 +20,7 @@ export declare class Profanity implements IOptions {
     addWords(words: string[]): void;
     removeWords(words: string[]): void;
     private isValidLang;
-    private isProfane;
+    private isProfaneWord;
     private replaceWord;
 }
-export {};
+export = isProfane;

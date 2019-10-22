@@ -1,5 +1,5 @@
 {
-  "name": "is-profane",
+  "name": "profanease",
   "version": "1.0.0",
   "description": "A lightweight javascript detector and filter for profanity words / bad words written in typescript",
   "main": "lib/index.js",
@@ -17,7 +17,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ZaHuPro/isProfane.git"
+    "url": "git+https://github.com/ZaHuPro/Profanease.git"
   },
   "keywords": [
     "is-profane",
@@ -39,9 +39,9 @@
   "author": "ZaHuPro",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/ZaHuPro/isProfane/issues"
+    "url": "https://github.com/ZaHuPro/Profanease/issues"
   },
-  "homepage": "https://github.com/ZaHuPro/isProfane#readme",
+  "homepage": "https://github.com/ZaHuPro/Profanease#readme",
   "devDependencies": {
     "@types/jest": "^24.0.19",
     "copyfiles": "^2.1.1",
