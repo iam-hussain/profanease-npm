@@ -9,8 +9,8 @@ A lightweight javascript detector and filter for profanity words / bad words wri
 
 Using npm:   
 ```js   
-$ npm i is-profane
-$ npm i --save is-profane 
+$ npm i profanease
+$ npm i --save profanease
 ```
 
 In Node.js: 
