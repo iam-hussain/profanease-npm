@@ -55,5 +55,9 @@
   },
   "dependencies": {
     "@types/node": "^12.11.2"
-  }
+  },
+  "publishConfig": {
+    "access" : "public"
+  },
+  "files": ["lib/**/*"]
 }
