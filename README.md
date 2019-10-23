@@ -33,7 +33,7 @@ Note: Default value for Profanease { lang : 'en', placeHolder: '*' }.
 **Placeholder Overrides**
 ```js   
 var isProfane = new Profanease({ placeHolder: 'x'});
-console.log(isProfane.clean("Don't be an ash0le")); //Don't be an xxxxxx
+isProfane.clean("Don't be an ash0le"); //Don't be an xxxxxx
 ```
 
 **Regex Overrides**
@@ -65,6 +65,12 @@ isProfane.clean('hell this wont clean anything'); //hell this wont clean anythin
 var isProfane = new Profanease();    
 isProfane.removeWords(['hells', 'sadist']);
 isProfane.clean("some hells word!"); //some hells word!
+```
+
+**Exclude words from the profanity list**
+```js
+var isProfane = new Profanease({ exclude: ['ash0le'] });  
+isProfane.clean("Don't be an ash0le"); //Don't be an ash0le
 ```
 
 **Export words list with language**
