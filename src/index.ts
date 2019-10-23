@@ -48,7 +48,7 @@ class Profanease implements IOptions {
     words
       .map(word => word.toLowerCase())
       .forEach(word => {
-        if (this.exclude.includes(word)) {
+        if (this.exclude.indexOf(word) >= 0) {
           this.exclude.splice(this.exclude.indexOf(word), 1);
         }
       });
@@ -62,20 +62,20 @@ class Profanease implements IOptions {
   }
 
   private isValidLang(lang: string) {
-    return (
-      Object.keys(wordList.default)
-        .map((key, index) => {
-          return key === lang;
-        })
-        .includes(true) || false
-    );
+    return Object.keys(wordList.default)
+      .map((key, index) => {
+        return key === lang;
+      })
+      .indexOf(true) >= 0
+      ? true
+      : false;
   }
 
   private isProfaneWord(wordToCheck: string) {
     return (
       this.list.filter(word => {
         const wordExp = new RegExp(`\\b${word.replace(/(\W)/g, '\\$1')}\\b`, 'gi');
-        return !this.exclude.includes(word.toLowerCase()) && wordExp.test(wordToCheck);
+        return this.exclude.indexOf(word.toLowerCase()) >= 0 ? false : true && wordExp.test(wordToCheck);
       }).length > 0 || false
     );
   }

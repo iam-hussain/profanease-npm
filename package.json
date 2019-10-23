@@ -1,6 +1,6 @@
 {
   "name": "profanease",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A lightweight javascript detector and filter for profanity words / bad words written in typescript",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -57,7 +57,9 @@
     "@types/node": "^12.11.2"
   },
   "publishConfig": {
-    "access" : "public"
+    "access": "public"
   },
-  "files": ["lib/**/*"]
+  "files": [
+    "lib/**/*"
+  ]
 }
