@@ -2,14 +2,20 @@ import Profanease = require('../index');
 import * as wordList from '../static/languages/index';
 
 test('Profanease: Default', () => {
-  let isProfane = new Profanease();
+  let isProfane = new Profanease({ lang: 'en' });
   expect(isProfane.clean('I am fucking asshole')).toEqual('I am ******* *******');
 });
 
-test('Profanease: lang :en', () => {
+test('Profanease:Clean lang :en', () => {
   let isProfane = new Profanease({ lang: 'en' });
   expect(isProfane.clean("Don't be an ash0le")).toEqual("Don't be an ******");
 });
+
+test('Profanease:Check lang :en', () => {
+  let isProfane = new Profanease({ lang: 'en' });
+  expect(isProfane.check("Don't be an ash0le")).toBe(true);
+});
+
 
 test('Profanease: placeHolder :x', () => {
   let isProfane = new Profanease({ placeHolder: 'x' });
@@ -28,14 +34,24 @@ test('Profanease: exclude initialize then same addWords', () => {
   expect(isProfane.clean('some bad word like ash0le!')).toBe('**** *** **** like ash0le!');
 });
 
-test('Profanease: addWords on initialize', () => {
+test('Profanease:Clean addWords on initialize', () => {
   let isProfane = new Profanease({ list: ['some', 'bad', 'word'] });
   expect(isProfane.clean('some bad word!')).toEqual('**** *** ****!');
 });
 
-test('Profanease: emptyList:True', () => {
+test('Profanease:Check addWords on initialize', () => {
+  let isProfane = new Profanease({ list: ['some', 'bad', 'word'] });
+  expect(isProfane.check('some bad word!')).toBe(true);
+});
+
+test('Profanease:Clean emptyList:True', () => {
   let isProfane = new Profanease({ emptyList: true });
   expect(isProfane.clean('hell this wont clean anything')).toEqual('hell this wont clean anything');
+});
+
+test('Profanease:Check emptyList:True', () => {
+  let isProfane = new Profanease({ emptyList: true });
+  expect(isProfane.check('hell this wont clean anything')).toBe(false);
 });
 
 test('Profanease: emptyList:True and List of array passing', () => {

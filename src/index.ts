@@ -19,7 +19,7 @@ class Profanease implements IOptions {
   public exclude: string[];
 
   constructor(option?: IOptions) {
-    this.lang = option && option.lang && this.isValidLang(option.lang) ? option.lang : 'en';
+    this.lang = option && option.lang && this.isValidLang(option.lang) ? option.lang : 'all';
     this.list =
       option && option.emptyList
         ? []
@@ -34,9 +34,18 @@ class Profanease implements IOptions {
     return wordToClean
       .split(/\b/)
       .map(word => {
-        return this.isProfaneWord(word) ? this.replaceWord(word) : word;
+        return this.check(word) ? this.replaceWord(word) : word;
       })
       .join('');
+  }
+
+  public check(wordToCheck: string) {
+    return (
+      this.list.filter(word => {
+        const wordExp = new RegExp(`\\b${word.replace(/(\W)/g, '\\$1')}\\b`, 'gi');
+        return this.exclude.indexOf(word.toLowerCase()) >= 0 ? false : true && wordExp.test(wordToCheck);
+      }).length > 0 || false
+    );
   }
 
   public wordsList(lang?: string) {
@@ -63,21 +72,12 @@ class Profanease implements IOptions {
 
   private isValidLang(lang: string) {
     return Object.keys(wordList.default)
-      .map((key, index) => {
+      .map((key) => {
         return key === lang;
       })
       .indexOf(true) >= 0
       ? true
       : false;
-  }
-
-  private isProfaneWord(wordToCheck: string) {
-    return (
-      this.list.filter(word => {
-        const wordExp = new RegExp(`\\b${word.replace(/(\W)/g, '\\$1')}\\b`, 'gi');
-        return this.exclude.indexOf(word.toLowerCase()) >= 0 ? false : true && wordExp.test(wordToCheck);
-      }).length > 0 || false
-    );
   }
 
   private replaceWord(wordToReplace: string) {
