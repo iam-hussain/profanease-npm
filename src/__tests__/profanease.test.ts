@@ -190,4 +190,59 @@ describe('Profanease class', () => {
       expect(filter.check('fuck')).toBe(true);
     });
   });
+
+  describe('Profanease.custom() — purely custom filter', () => {
+    it('only matches provided words', () => {
+      const filter = Profanease.custom(['spam', 'scam', 'phishing']);
+      expect(filter.check('this is spam')).toBe(true);
+      expect(filter.check('this is scam')).toBe(true);
+      expect(filter.check('fuck')).toBe(false);
+      expect(filter.check('hello world')).toBe(false);
+    });
+
+    it('cleans only custom words', () => {
+      const filter = Profanease.custom(['blocked', 'banned']);
+      expect(filter.clean('this is blocked content')).toBe('this is ******* content');
+      expect(filter.clean('fuck is fine here')).toBe('fuck is fine here');
+    });
+
+    it('accepts all standard options', () => {
+      const filter = Profanease.custom(['secret'], {
+        placeholder: 'X',
+        replacement: 'full',
+        normalize: 'aggressive',
+      });
+      expect(filter.clean('secret')).toBe('XXXXXX');
+    });
+
+    it('supports addWords after creation', () => {
+      const filter = Profanease.custom(['one']);
+      expect(filter.check('two')).toBe(false);
+      filter.addWords(['two']);
+      expect(filter.check('two')).toBe(true);
+    });
+
+    it('supports removeWords after creation', () => {
+      const filter = Profanease.custom(['one', 'two']);
+      expect(filter.check('one')).toBe(true);
+      filter.removeWords(['one']);
+      expect(filter.check('one')).toBe(false);
+      expect(filter.check('two')).toBe(true);
+    });
+
+    it('works with analyze()', () => {
+      const filter = Profanease.custom(['flagged']);
+      const result = filter.analyze('this is flagged text');
+      expect(result.isProfane).toBe(true);
+      expect(result.matches).toHaveLength(1);
+      expect(result.matches[0].original).toBe('flagged');
+      expect(result.cleaned).toBe('this is ******* text');
+    });
+
+    it('starts completely empty with no words', () => {
+      const filter = Profanease.custom([]);
+      expect(filter.check('anything')).toBe(false);
+      expect(filter.check('fuck shit damn')).toBe(false);
+    });
+  });
 });

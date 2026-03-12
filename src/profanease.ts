@@ -210,6 +210,27 @@ export class Profanease {
   }
 
   /**
+   * Create a purely custom filter with no default word lists.
+   * Only the words you provide will be filtered.
+   *
+   * @example
+   * ```ts
+   * const filter = Profanease.custom(['badword', 'offensive'], {
+   *   placeholder: '#',
+   *   normalize: 'aggressive',
+   * });
+   * filter.check('badword');  // true
+   * filter.check('fuck');     // false
+   * ```
+   */
+  static custom(
+    words: string[],
+    options: Omit<ProfaneaseOptions, 'languages' | 'lang' | 'emptyList' | 'list'> = {},
+  ): Profanease {
+    return new Profanease({ ...options, emptyList: true, list: words });
+  }
+
+  /**
    * Add words to the profanity list.
    */
   addWords(words: string[], categories: Category[] = []): void {
