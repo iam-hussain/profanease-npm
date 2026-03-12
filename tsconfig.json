@@ -1,18 +1,18 @@
 {
   "compilerOptions": {
-    "target": "es5",
-    "module": "commonjs",
-    "moduleResolution": "node",
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
     "declaration": true,
-    "outDir": "./lib",
+    "outDir": "./dist",
     "strict": true,
-    "sourceMap": true,
-    "baseUrl": "src",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
-    "paths": {
-        "@languages/*": ["static/languages"]
-    }    
+    "isolatedModules": true,
+    "verbatimModuleSyntax": false
   },
-  "include": ["src", "./**/*", "src/static/*"],
-  "exclude": ["node_modules", "**/__tests__/*"]
+  "include": ["src"],
+  "exclude": ["node_modules", "dist", "**/__tests__/*"]
 }
