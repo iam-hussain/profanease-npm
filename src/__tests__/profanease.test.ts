@@ -245,4 +245,73 @@ describe('Profanease class', () => {
       expect(filter.check('fuck shit damn')).toBe(false);
     });
   });
+
+  describe('phrase matching', () => {
+    it('check() detects multi-word phrases', () => {
+      const filter = Profanease.custom(['blow job', 'carpet muncher']);
+      expect(filter.check('get a blow job')).toBe(true);
+      expect(filter.check('blow')).toBe(false);
+      expect(filter.check('job')).toBe(false);
+    });
+
+    it('clean() censors multi-word phrases', () => {
+      const filter = Profanease.custom(['blow job']);
+      expect(filter.clean('get a blow job now')).toBe('get a **** *** now');
+    });
+
+    it('analyze() reports multi-word phrase matches', () => {
+      const filter = Profanease.custom(['blow job']);
+      const result = filter.analyze('get a blow job now');
+      expect(result.isProfane).toBe(true);
+      expect(result.matches.length).toBeGreaterThan(0);
+      expect(result.matches[0].matched).toBe('blow job');
+      expect(result.cleaned).toBe('get a **** *** now');
+    });
+
+    it('handles phrases from built-in English pack', () => {
+      const filter = new Profanease({ languages: [en] });
+      // "Blow Job" is in the English word list
+      expect(filter.check('Blow Job')).toBe(true);
+      const result = filter.analyze('Blow Job');
+      expect(result.isProfane).toBe(true);
+    });
+  });
+
+  describe('punctuation handling', () => {
+    it('check() detects words with trailing punctuation', () => {
+      const filter = Profanease.custom(['bad']);
+      expect(filter.check('bad!')).toBe(true);
+      expect(filter.check('bad.')).toBe(true);
+      expect(filter.check('bad?')).toBe(true);
+    });
+
+    it('check() detects words with surrounding punctuation', () => {
+      const filter = Profanease.custom(['bad']);
+      expect(filter.check('(bad)')).toBe(true);
+      expect(filter.check('"bad"')).toBe(true);
+    });
+
+    it('clean() preserves punctuation around replaced words', () => {
+      const filter = Profanease.custom(['bad']);
+      expect(filter.clean('(bad)')).toBe('(***)')
+      expect(filter.clean('bad!')).toBe('***!');
+      expect(filter.clean('"bad"')).toBe('"***"');
+    });
+
+    it('analyze() detects words with punctuation', () => {
+      const filter = Profanease.custom(['bad']);
+      const result = filter.analyze('this is bad!');
+      expect(result.isProfane).toBe(true);
+      expect(result.matches).toHaveLength(1);
+      expect(result.cleaned).toBe('this is ***!');
+    });
+
+    it('handles profanity with punctuation from English pack', () => {
+      const filter = new Profanease({ languages: [en] });
+      expect(filter.check('fuck!')).toBe(true);
+      expect(filter.check('(fuck)')).toBe(true);
+      expect(filter.clean('fuck!')).toBe('****!');
+      expect(filter.clean('(fuck)')).toBe('(****)');
+    });
+  });
 });
