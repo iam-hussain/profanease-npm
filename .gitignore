@@ -63,4 +63,5 @@ typings/
 
 #Build files and Others
 /lib
+/dist
 /coverage
