@@ -51,13 +51,13 @@ jobs:
           node-version: 22
           cache: npm
           registry-url: https://npm.pkg.github.com
-          scope: '@zahupro'
+          scope: '@iam-hussain'
 
       - run: npm ci
       - run: npm run build
 
-      # GitHub Packages requires scoped package names
-      - run: npm pkg set name='@zahupro/profanease'
+      # GitHub Packages requires scoped package names matching the repo owner
+      - run: npm pkg set name='@iam-hussain/profanease'
       - run: npm publish --registry=https://npm.pkg.github.com
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
