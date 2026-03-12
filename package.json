@@ -1,6 +1,6 @@
 {
   "name": "profanease",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Modern, lightweight profanity detection & content moderation toolkit with l33t speak detection, multi-language support, and guard rails",
   "type": "module",
   "main": "./dist/index.cjs",
