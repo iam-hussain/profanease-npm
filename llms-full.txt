@@ -1,0 +1,301 @@
+# Profanease — Full API Reference
+
+> Modern, lightweight profanity detection & content moderation toolkit for JavaScript/TypeScript. Zero dependencies at runtime. Detects l33t speak ($h1t→shit), Unicode homoglyphs (Cyrillic а→a), zero-width characters, and repeated character obfuscation (fuuuck→fuck). Ships with 25 language packs (tree-shakeable). Content categories for fine-grained guard rails. Custom word list support with no defaults. Works everywhere: Node.js ≥20, browsers, Deno, Bun, Cloudflare Workers.
+
+## Installation
+
+```
+npm install profanease
+```
+
+ESM: `import { Profanease } from 'profanease'`
+CJS: `const { Profanease } = require('profanease')`
+
+---
+
+## Class: Profanease
+
+### Constructor
+
+```ts
+new Profanease(options?: ProfaneaseOptions)
+```
+
+### Instance Methods
+
+#### check(text: string): boolean
+Returns `true` if the text contains any profane word. Fast boolean check — use this for guard rails.
+
+```ts
+filter.check('hello');       // false
+filter.check('what the fuck'); // true
+filter.check('$h1t');        // true (l33t speak detected at normalize='moderate')
+```
+
+#### clean(text: string): string
+Returns the text with all profane words replaced according to the replacement strategy.
+
+```ts
+filter.clean('fuck you');     // '**** you'
+filter.clean('$h1t');         // '****'
+filter.clean('blow job');     // '**** ***' (phrase matching)
+```
+
+#### analyze(text: string): AnalysisResult
+Returns detailed analysis with every match, categories, severity score, and cleaned text.
+
+```ts
+filter.analyze('fuck this shit');
+// {
+//   isProfane: true,
+//   matches: [
+//     { original: 'fuck', normalized: 'fuck', matched: 'fuck', index: 0, categories: ['profanity'] },
+//     { original: 'shit', normalized: 'shit', matched: 'shit', index: 10, categories: ['profanity'] }
+//   ],
+//   categories: ['profanity'],
+//   severity: 'mild',
+//   cleaned: '**** this ****'
+// }
+```
+
+#### addWords(words: string[], categories?: Category[]): void
+Add words to the filter at runtime.
+
+```ts
+filter.addWords(['custom-term']);
+filter.addWords(['slur-word'], [Category.SLUR]);
+```
+
+#### removeWords(words: string[]): void
+Exclude words from filtering.
+
+```ts
+filter.removeWords(['hell', 'damn']);
+```
+
+#### wordsList(lang?: string): string[]
+Get the active word list, or a specific language pack's words.
+
+```ts
+filter.wordsList();      // all loaded words
+filter.wordsList('en');  // English pack words
+```
+
+### Static Methods
+
+#### Profanease.custom(words: string[], options?): Profanease
+Create a filter with ONLY your custom words — no built-in profanity lists loaded.
+
+```ts
+const filter = Profanease.custom(['spam', 'scam', 'phishing']);
+filter.check('spam');    // true
+filter.check('fuck');    // false (not in custom list)
+```
+
+Options accepted: `placeholder`, `replacement`, `normalize`, `categories`, `exclude`.
+
+---
+
+## Functional API
+
+Stateless one-off functions — each creates a temporary Profanease instance:
+
+```ts
+import { check, clean, analyze } from 'profanease';
+import en from 'profanease/langs/en';
+
+check('text', { languages: [en] });    // boolean
+clean('text', { languages: [en] });    // string
+analyze('text', { languages: [en] });  // AnalysisResult
+```
+
+---
+
+## Types
+
+### ProfaneaseOptions
+
+```ts
+interface ProfaneaseOptions {
+  languages?: LanguagePack[];       // Language packs to load (default: all)
+  list?: string[];                  // Additional custom words
+  exclude?: string[];               // Words to exclude from filtering
+  emptyList?: boolean;              // Start with empty word list (default: false)
+  placeholder?: string;             // Censor character (default: '*')
+  replacement?: ReplacementStrategy; // How to replace matches (default: 'asterisk')
+  normalize?: NormalizationLevel;   // Evasion detection level (default: 'moderate')
+  categories?: Category[];          // Only filter these categories
+}
+```
+
+### AnalysisResult
+
+```ts
+interface AnalysisResult {
+  isProfane: boolean;       // Whether any profanity was found
+  matches: MatchResult[];   // All matches with metadata
+  categories: Category[];   // All unique categories found
+  severity: Severity;       // 'none' | 'mild' | 'moderate' | 'severe'
+  cleaned: string;          // Text with matches censored
+}
+```
+
+### MatchResult
+
+```ts
+interface MatchResult {
+  original: string;      // Word as it appeared in input
+  normalized: string;    // Word after normalization
+  matched: string;       // Word list entry it matched
+  index: number;         // Start position in input text
+  categories: Category[];// Categories of matched word
+}
+```
+
+### Category (enum)
+
+```ts
+enum Category {
+  PROFANITY = 'profanity',  // Swear words, expletives
+  SEXUAL = 'sexual',        // Sexual terms, explicit content
+  SLUR = 'slur',            // Racial, ethnic, identity slurs
+  INSULT = 'insult',        // Personal insults, derogatory terms
+  RELIGIOUS = 'religious',  // Religious profanity, blasphemy
+  DRUGS = 'drugs',          // Drug references
+  VIOLENCE = 'violence',    // Violent language
+}
+```
+
+### NormalizationLevel
+
+- `'none'` — Exact match only
+- `'basic'` — Lowercase + strip accents (Fück → fuck)
+- `'moderate'` — + l33t speak decoding ($h1t → shit, @$$ → ass)
+- `'aggressive'` — + homoglyphs (Cyrillic→Latin) + zero-width char removal + repeated char collapse (fuuuck → fuck)
+
+### ReplacementStrategy
+
+- `'asterisk'` — Replace each character: fuck → ****
+- `'grawlix'` — Comic-style: fuck → @#$%
+- `'word'` — Label: fuck → [censored]
+- `'full'` — Repeated placeholder: fuck → ****
+- `(word: string) => string` — Custom function
+
+### Severity Scoring
+
+- `'none'` — No matches
+- `'mild'` — 1-2 matches without severe categories
+- `'moderate'` — 3+ matches, or sexual/violence content
+- `'severe'` — Any slurs, or 5+ matches
+
+---
+
+## Language Packs
+
+Import individually for tree-shaking:
+
+```ts
+import en from 'profanease/langs/en';  // English (2,983 words, categorized)
+import es from 'profanease/langs/es';  // Spanish (190 words)
+import fr from 'profanease/langs/fr';  // French (200 words)
+import de from 'profanease/langs/de';  // German (179 words)
+import all from 'profanease/langs/all'; // All 25 languages combined
+```
+
+Available: ar, cs, da, de, en, eo, es, fa, fi, fr, hi, hu, it, ja, ko, nl, no, pl, pt, ru, sv, th, tlh, tr, zh
+
+Only the English pack (`en`) includes category tags. Other packs are flat string arrays.
+
+---
+
+## Core Utilities
+
+Low-level functions exported for custom pipelines:
+
+```ts
+import { normalize, tokenize, replaceWord, decodeLeet, normalizeHomoglyphs } from 'profanease';
+
+normalize('$h1t', 'moderate');        // 'shit'
+normalize('café', 'basic');           // 'cafe'
+decodeLeet('@$$h0l3');                // 'asshole'
+normalizeHomoglyphs('\u0430ss');      // 'ass' (Cyrillic а → Latin a)
+tokenize('hello world!');             // [{ value: 'hello', isWord: true, index: 0 }, ...]
+replaceWord('fuck', 'grawlix');       // '@#$%'
+```
+
+---
+
+## MCP Server (AI Integration)
+
+Profanease ships an MCP (Model Context Protocol) server so AI assistants can use profanity filtering as a tool.
+
+### Configuration
+
+Add to your MCP client config (Claude Desktop, Cursor, etc.):
+
+```json
+{
+  "mcpServers": {
+    "profanease": {
+      "command": "npx",
+      "args": ["profanease-mcp"]
+    }
+  }
+}
+```
+
+### Available MCP Tools
+
+#### profanease_check
+Check if text contains profanity. Returns `{ isProfane: boolean }`.
+
+Parameters:
+- `text` (string, required) — Text to check
+- `language` ("en" | "all", default: "en") — Language pack
+- `normalize` ("none" | "basic" | "moderate" | "aggressive", default: "moderate")
+- `categories` (string[], optional) — Only check these categories
+- `custom_words` (string[], optional) — Additional words to filter
+- `custom_only` (boolean, default: false) — Only use custom words, no built-in lists
+
+#### profanease_clean
+Clean text by replacing profane words. Returns `{ cleaned: string }`.
+
+Parameters: Same as check, plus:
+- `placeholder` (string, default: "*") — Censor character
+- `replacement` ("asterisk" | "grawlix" | "word" | "full", default: "asterisk")
+
+#### profanease_analyze
+Full analysis with matches, categories, severity. Returns `AnalysisResult`.
+
+Parameters: Same as check.
+
+---
+
+## Common AI Use Cases
+
+### Guard Rails — Block harmful input before processing
+```ts
+const filter = new Profanease({ languages: [en], categories: [Category.SLUR, Category.VIOLENCE] });
+if (filter.check(userInput)) {
+  return 'Your message contains inappropriate content.';
+}
+```
+
+### Content Moderation — Severity-based routing
+```ts
+const result = filter.analyze(userInput);
+if (result.severity === 'severe') escalateToHuman(userInput);
+else if (result.isProfane) autoClean(result.cleaned);
+```
+
+### Custom Brand Filter — No defaults
+```ts
+const brandFilter = Profanease.custom(['competitor-name', 'banned-phrase']);
+```
+
+### Multi-language Support
+```ts
+import en from 'profanease/langs/en';
+import es from 'profanease/langs/es';
+const filter = new Profanease({ languages: [en, es] });
+```

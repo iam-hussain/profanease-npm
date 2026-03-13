@@ -1,0 +1,79 @@
+# Profanease
+
+> Modern, lightweight profanity detection & content moderation toolkit for JavaScript/TypeScript. Detects l33t speak, homoglyphs, zero-width chars. Supports 25 languages, content categories for guard rails, and custom word lists. Works in Node.js, browsers, Deno, Bun, and edge runtimes.
+
+## Installation
+
+```
+npm install profanease
+```
+
+## Quick Start
+
+```ts
+import { Profanease } from 'profanease';
+import en from 'profanease/langs/en';
+
+const filter = new Profanease({ languages: [en] });
+filter.check('what the fuck');   // true
+filter.clean('what the fuck');   // 'what the ****'
+filter.analyze('what the fuck'); // { isProfane: true, matches: [...], severity: 'mild', cleaned: '...' }
+```
+
+## API
+
+- `filter.check(text: string): boolean` — Does text contain profanity?
+- `filter.clean(text: string): string` — Replace profane words with placeholders
+- `filter.analyze(text: string): AnalysisResult` — Detailed match info, categories, severity, cleaned text
+- `filter.addWords(words: string[]): void` — Add words to the filter at runtime
+- `filter.removeWords(words: string[]): void` — Exclude words from filtering
+- `filter.wordsList(lang?: string): string[]` — Get loaded word list
+- `Profanease.custom(words, opts?)` — Create filter with ONLY your custom words (no defaults)
+
+## Functional API (stateless)
+
+```ts
+import { check, clean, analyze } from 'profanease';
+check('text', { languages: [en] });   // boolean
+clean('text', { languages: [en] });   // string
+analyze('text', { languages: [en] }); // AnalysisResult
+```
+
+## Options
+
+- `languages: LanguagePack[]` — Language packs (import from profanease/langs/*)
+- `list: string[]` — Additional custom words
+- `exclude: string[]` — Words to skip
+- `emptyList: boolean` — Start with no words
+- `placeholder: string` — Censor character (default: '*')
+- `replacement: 'asterisk' | 'grawlix' | 'word' | 'full' | (word) => string`
+- `normalize: 'none' | 'basic' | 'moderate' | 'aggressive'` — Evasion detection level
+- `categories: Category[]` — Only filter: 'profanity', 'sexual', 'slur', 'insult', 'religious', 'drugs', 'violence'
+
+## AnalysisResult
+
+```ts
+{ isProfane: boolean, matches: MatchResult[], categories: Category[], severity: 'none'|'mild'|'moderate'|'severe', cleaned: string }
+```
+
+## MatchResult
+
+```ts
+{ original: string, normalized: string, matched: string, index: number, categories: Category[] }
+```
+
+## MCP Server
+
+Profanease ships an MCP server for AI assistant integration:
+
+```json
+{ "mcpServers": { "profanease": { "command": "npx", "args": ["profanease-mcp"] } } }
+```
+
+Tools: `profanease_check`, `profanease_clean`, `profanease_analyze`
+
+## Links
+
+- [Full documentation](https://github.com/iam-hussain/profanease-npm/blob/main/llms-full.txt)
+- [Source code](https://github.com/iam-hussain/profanease-npm)
+- [npm](https://www.npmjs.com/package/profanease)

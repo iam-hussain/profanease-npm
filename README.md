@@ -7,6 +7,8 @@ Modern, lightweight profanity detection & content moderation toolkit for JavaScr
 - **Evasion-resistant** — l33t speak (`$h1t`), homoglyphs, zero-width chars
 - **Guard rails** — filter by content category (slurs, sexual, insults, drugs, violence)
 - **Custom filters** — use your own word lists with zero defaults
+- **MCP Server** — AI assistants can use profanity filtering as a tool via [Model Context Protocol](https://modelcontextprotocol.io)
+- **AI-friendly** — ships with `llms.txt` for LLM discovery, typed API for code assistants
 - **Dual format** — ESM + CJS with full TypeScript types
 
 ---
@@ -16,6 +18,8 @@ Modern, lightweight profanity detection & content moderation toolkit for JavaScr
 - [Installation](#installation)
 - [Quick Start](#quick-start)
 - [API Overview](#api-overview)
+- [MCP Server (AI Integration)](#mcp-server-ai-integration)
+- [AI / LLM Usage](#ai--llm-usage)
 - [Custom Filter (No Defaults)](#custom-filter-no-defaults)
 - [Language Packs](#language-packs)
 - [Normalization (Evasion Detection)](#normalization-evasion-detection)
@@ -94,6 +98,101 @@ const filter = new Profanease({ languages: [en.default] });
 | `filter.removeWords(words)` | `void` | Exclude words from filtering at runtime |
 | `filter.wordsList(lang?)` | `string[]` | Get loaded word list (or a specific language) |
 | `Profanease.custom(words, opts?)` | `Profanease` | Create filter with only your custom words |
+
+---
+
+## MCP Server (AI Integration)
+
+Profanease ships an [MCP (Model Context Protocol)](https://modelcontextprotocol.io) server, allowing AI assistants like Claude, Cursor, and others to use profanity filtering as a tool.
+
+### Setup
+
+Add to your MCP client config:
+
+**Claude Desktop** (`claude_desktop_config.json`):
+
+```json
+{
+  "mcpServers": {
+    "profanease": {
+      "command": "npx",
+      "args": ["profanease-mcp"]
+    }
+  }
+}
+```
+
+**Claude Code** (`.mcp.json` in project root):
+
+```json
+{
+  "mcpServers": {
+    "profanease": {
+      "command": "npx",
+      "args": ["profanease-mcp"]
+    }
+  }
+}
+```
+
+**Cursor** (Settings > MCP Servers):
+
+```json
+{
+  "profanease": {
+    "command": "npx",
+    "args": ["profanease-mcp"]
+  }
+}
+```
+
+### Available Tools
+
+| Tool | Description | Returns |
+|------|-------------|---------|
+| `profanease_check` | Check if text contains profanity | `{ isProfane: boolean }` |
+| `profanease_clean` | Replace profane words with placeholders | `{ cleaned: string }` |
+| `profanease_analyze` | Full analysis with matches, categories, severity | `AnalysisResult` |
+
+All tools accept: `text`, `language` (en/all), `normalize`, `categories`, `custom_words`, `custom_only`.
+
+### Example AI Interaction
+
+> **User:** "Check if this user comment is appropriate: [text]"
+>
+> The AI calls `profanease_analyze` with the text and gets back match details, severity, categories, and cleaned text — then makes an informed moderation decision.
+
+---
+
+## AI / LLM Usage
+
+Profanease is designed to be AI-friendly:
+
+- **`llms.txt`** — Ships with [llms.txt](https://llmstxt.org/) for AI model discovery. LLMs can read `/llms.txt` to understand the full API.
+- **`llms-full.txt`** — Extended reference with all types, methods, and examples.
+- **MCP Server** — Native tool integration (see above).
+- **Typed API** — Full TypeScript types make it easy for AI code assistants to use correctly.
+- **Functional API** — Stateless `check()`, `clean()`, `analyze()` functions ideal for one-off AI calls.
+
+### Common AI Guard Rail Patterns
+
+```ts
+// Block harmful input before LLM processing
+const filter = new Profanease({
+  languages: [en],
+  categories: [Category.SLUR, Category.VIOLENCE],
+});
+
+if (filter.check(userInput)) {
+  return 'Your message contains inappropriate content.';
+}
+
+// Severity-based routing
+const result = filter.analyze(userInput);
+if (result.severity === 'severe') escalateToHuman(userInput);
+else if (result.isProfane) processWithCaution(result.cleaned);
+else processNormally(userInput);
+```
 
 ---
 
