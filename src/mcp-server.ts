@@ -33,7 +33,7 @@ const NORMALIZATION_VALUES = ['none', 'basic', 'moderate', 'aggressive'] as cons
 
 const server = new McpServer({
   name: 'profanease',
-  version: '2.0.1',
+  version: '2.0.2',
 });
 
 // ── Tool: check ──────────────────────────────────────────────
