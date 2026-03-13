@@ -51,7 +51,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ZaHuPro/Profanease.git"
+    "url": "git+https://github.com/iam-hussain/profanease-npm.git"
   },
   "keywords": [
     "profanity",
@@ -75,12 +75,12 @@
     "ai-safety",
     "ai-guardrails"
   ],
-  "author": "ZaHuPro",
+  "author": "iam-hussain",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/ZaHuPro/Profanease/issues"
+    "url": "https://github.com/iam-hussain/profanease-npm/issues"
   },
-  "homepage": "https://github.com/ZaHuPro/Profanease#readme",
+  "homepage": "https://github.com/iam-hussain/profanease-npm#readme",
   "engines": {
     "node": ">=20"
   },
@@ -96,7 +96,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "dependencies": {
+  "optionalDependencies": {
     "@modelcontextprotocol/sdk": "^1.27.1",
     "zod": "^3.25.76"
   }

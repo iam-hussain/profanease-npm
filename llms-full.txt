@@ -1,6 +1,6 @@
 # Profanease — Full API Reference
 
-> Modern, lightweight profanity detection & content moderation toolkit for JavaScript/TypeScript. Zero dependencies at runtime. Detects l33t speak ($h1t→shit), Unicode homoglyphs (Cyrillic а→a), zero-width characters, and repeated character obfuscation (fuuuck→fuck). Ships with 25 language packs (tree-shakeable). Content categories for fine-grained guard rails. Custom word list support with no defaults. Works everywhere: Node.js ≥20, browsers, Deno, Bun, Cloudflare Workers.
+> Modern, lightweight profanity detection & content moderation toolkit for JavaScript/TypeScript. Zero runtime dependencies for the core library (MCP server requires optional peer deps). Detects l33t speak ($h1t→shit), Unicode homoglyphs (Cyrillic а→a), zero-width characters, and repeated character obfuscation (fuuuck→fuck). Ships with 25 language packs (tree-shakeable). Content categories for fine-grained guard rails. Custom word list support with no defaults. Works everywhere: Node.js ≥20, browsers, Deno, Bun, Cloudflare Workers.
 
 ## Installation
 
