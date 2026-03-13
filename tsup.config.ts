@@ -14,11 +14,11 @@ export default defineConfig([
     clean: true,
     target: 'es2022',
     splitting: false,
-    sourcemap: true,
+    sourcemap: false,
     outDir: 'dist',
     treeshake: true,
   },
-  // MCP server build: ESM only, no types needed
+  // MCP server build: ESM only, no types needed, externalize deps
   {
     entry: ['src/mcp-server.ts'],
     format: ['esm'],
@@ -29,6 +29,7 @@ export default defineConfig([
     sourcemap: false,
     outDir: 'dist',
     treeshake: true,
+    external: ['@modelcontextprotocol/sdk', 'zod'],
     async onSuccess() {
       const { readFileSync, writeFileSync, chmodSync } = await import('fs');
       const path = 'dist/mcp-server.js';

@@ -32,7 +32,11 @@
     "profanease-mcp": "./dist/mcp-server.js"
   },
   "files": [
-    "dist",
+    "dist/**/*.js",
+    "dist/**/*.cjs",
+    "dist/**/*.d.ts",
+    "dist/**/*.d.cts",
+    "!dist/**/*.map",
     "llms.txt",
     "llms-full.txt"
   ],
