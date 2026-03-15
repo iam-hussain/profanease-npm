@@ -1,5 +1,13 @@
 # Profanease
 
+[![npm version](https://img.shields.io/npm/v/profanease.svg)](https://www.npmjs.com/package/profanease)
+[![npm downloads](https://img.shields.io/npm/dm/profanease.svg)](https://www.npmjs.com/package/profanease)
+[![CI](https://github.com/iam-hussain/profanease-npm/actions/workflows/ci.yml/badge.svg)](https://github.com/iam-hussain/profanease-npm/actions/workflows/ci.yml)
+[![bundle size](https://img.shields.io/bundlephobia/minzip/profanease)](https://bundlephobia.com/package/profanease)
+[![zero dependencies](https://img.shields.io/badge/dependencies-0-brightgreen)](https://www.npmjs.com/package/profanease)
+[![license](https://img.shields.io/npm/l/profanease.svg)](https://github.com/iam-hussain/profanease-npm/blob/main/LICENSE)
+[![TypeScript](https://img.shields.io/badge/TypeScript-ready-blue.svg)](https://www.typescriptlang.org/)
+
 Modern, lightweight profanity detection & content moderation toolkit for JavaScript/TypeScript.
 
 - **Universal** — Node.js, Browser, Deno, Bun, Edge runtimes (zero platform dependencies)
